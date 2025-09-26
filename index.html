@@ -2,8 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Te Amo ❤</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Una animación de amor con corazón y foto personalizada">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>Te Amo ❤️</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400;600&display=swap');
         
@@ -11,6 +15,17 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+        
+        :root {
+            --heart-size: min(600px, 90vw);
+            --photo-size: min(300px, 45vw);
+            --glow-size: min(500px, 75vw);
+            --title-size: clamp(2.5rem, 8vw, 4rem);
+            --date-size: clamp(1.5rem, 5vw, 2.5rem);
+            --message-size: clamp(1rem, 3vw, 1.2rem);
+            --primary-color: #00bfff;
+            --secondary-color: #ff69b4;
         }
         
         body {
@@ -22,6 +37,95 @@
             justify-content: center;
             align-items: center;
             position: relative;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Pantalla de carga */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 1s ease;
+        }
+        
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 105, 180, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            border-bottom-color: var(--secondary-color);
+            animation: spin 1s infinite ease-in-out;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Controles interactivos */
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+        
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+        }
+        
+        .control-btn:hover, .control-btn:active {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px var(--primary-color);
+        }
+        
+        /* Brillos */
+        .sparkle {
+            position: absolute;
+            border-radius: 50%;
+            background-color: #fff;
+            pointer-events: none;
+            animation: sparkleAnimation 2s ease-in-out forwards;
+            z-index: 5;
+            will-change: transform, opacity;
+        }
+        
+        @keyframes sparkleAnimation {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) rotate(180deg);
+                opacity: 0;
+            }
         }
         
         .container {
@@ -32,46 +136,51 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
         
         .title {
             position: absolute;
-            top: 50px;
+            top: clamp(20px, 5vh, 50px);
             font-family: 'Dancing Script', cursive;
-            font-size: 4rem;
-            color: #00bfff;
-            text-shadow: 0 0 20px #00bfff, 0 0 40px #00bfff;
+            font-size: var(--title-size);
+            color: var(--primary-color);
+            text-shadow: 0 0 20px var(--primary-color), 0 0 40px var(--primary-color);
             animation: titleGlow 3s ease-in-out infinite alternate;
             z-index: 10;
+            text-align: center;
+            width: 100%;
         }
         
         @keyframes titleGlow {
             from {
-                text-shadow: 0 0 20px #00bfff, 0 0 40px #00bfff;
+                text-shadow: 0 0 20px var(--primary-color), 0 0 40px var(--primary-color);
             }
             to {
-                text-shadow: 0 0 30px #00bfff, 0 0 60px #00bfff, 0 0 80px #00bfff;
+                text-shadow: 0 0 30px var(--primary-color), 0 0 60px var(--primary-color), 0 0 80px var(--primary-color);
             }
         }
         
         .heart-container {
-            width: 600px;
-            height: 600px;
+            width: var(--heart-size);
+            height: var(--heart-size);
             position: relative;
-            margin: 50px 0;
+            margin: clamp(20px, 5vh, 50px) 0;
+            will-change: transform;
         }
         
         .particle {
             position: absolute;
             width: 10px;
             height: 15px;
-            background: #00bfff;
+            background: var(--primary-color);
             border-radius: 50% 0 50% 0;
-            box-shadow: 0 0 6px #00bfff, 0 0 12px #00bfff;
+            box-shadow: 0 0 6px var(--primary-color), 0 0 12px var(--primary-color);
             opacity: 0;
             animation: formHeart 4s ease-in-out forwards, floatPetal 3s ease-in-out infinite;
             transform-origin: center center;
             z-index: 2;
+            will-change: transform, opacity;
         }
         
         @keyframes formHeart {
@@ -106,24 +215,25 @@
         
         .heart-photo-container {
             position: relative;
-            width: 600px;
-            height: 600px;
-            margin: 50px 0;
+            width: var(--heart-size);
+            height: var(--heart-size);
+            margin: clamp(20px, 5vh, 50px) 0;
         }
         
         .photo-reveal {
             position: absolute;
-            width: 300px;
-            height: 300px;
+            width: var(--photo-size);
+            height: var(--photo-size);
             overflow: hidden;
             opacity: 0;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
             animation: photoAppear 2s ease-out 5s forwards;
-            box-shadow: 0 0 30px #00bfff;
+            box-shadow: 0 0 30px var(--primary-color);
             z-index: 3;
             clip-path: url(#heart-clip);
+            will-change: transform, opacity;
         }
         
         .photo-reveal img {
@@ -149,13 +259,15 @@
         
         .date-reveal {
             position: absolute;
-            bottom: 80px;
+            bottom: clamp(40px, 10vh, 80px);
             font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
-            color: #00bfff;
-            text-shadow: 0 0 20px #00bfff;
+            font-size: var(--date-size);
+            color: var(--primary-color);
+            text-shadow: 0 0 20px var(--primary-color);
             opacity: 0;
             animation: dateAppear 1.5s ease-out 6.5s forwards;
+            text-align: center;
+            width: 100%;
         }
         
         @keyframes dateAppear {
@@ -171,12 +283,14 @@
         
         .message {
             position: absolute;
-            bottom: 30px;
-            font-size: 1.2rem;
+            bottom: clamp(15px, 5vh, 30px);
+            font-size: var(--message-size);
             color: #fff;
             text-align: center;
             opacity: 0;
             animation: messageAppear 1s ease-out 7s forwards;
+            width: 90%;
+            max-width: 600px;
         }
         
         @keyframes messageAppear {
@@ -197,6 +311,7 @@
             background: #fff;
             border-radius: 50%;
             animation: sparkle 2s ease-in-out infinite;
+            will-change: transform, opacity;
         }
         
         @keyframes sparkle {
@@ -218,13 +333,15 @@
             height: 100%;
             pointer-events: none;
             z-index: 1;
+            overflow: hidden;
         }
         
         .floating-heart {
             position: absolute;
             color: rgba(0, 191, 255, 0.6);
-            font-size: 20px;
+            font-size: clamp(15px, 3vw, 20px);
             animation: floatUp 8s linear infinite;
+            will-change: transform, opacity;
         }
         
         @keyframes floatUp {
@@ -248,12 +365,13 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 500px;
-            height: 500px;
+            width: var(--glow-size);
+            height: var(--glow-size);
             background: radial-gradient(circle, rgba(0,191,255,0.3) 0%, transparent 70%);
             border-radius: 50%;
             transform: translate(-50%, -50%);
             animation: pulse 3s ease-in-out infinite;
+            will-change: transform, opacity;
         }
         
         @keyframes pulse {
@@ -264,6 +382,123 @@
             50% {
                 transform: translate(-50%, -50%) scale(1.2);
                 opacity: 0.6;
+            }
+        }
+        
+        /* Controles y mejoras visuales */
+        .controls {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+            opacity: 0.3;
+            transition: opacity 0.3s ease;
+        }
+        
+        .controls:hover {
+            opacity: 1;
+        }
+        
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 0 10px var(--primary-color);
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px var(--primary-color);
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 1s ease;
+        }
+        
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid transparent;
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Mejoras visuales */
+        .sparkles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        /* Media queries para diferentes tamaños de pantalla */
+        @media (max-width: 768px) {
+            :root {
+                --heart-size: 85vw;
+                --photo-size: 40vw;
+                --glow-size: 70vw;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            :root {
+                --heart-size: 90vw;
+                --photo-size: 45vw;
+                --glow-size: 80vw;
+            }
+            
+            .title {
+                top: 10px;
+            }
+            
+            .date-reveal {
+                bottom: 35px;
+            }
+            
+            .message {
+                bottom: 10px;
+            }
+        }
+        
+        /* Mejoras de rendimiento */
+        @media (prefers-reduced-motion: reduce) {
+            .particle, .floating-heart, .glow-effect, .title, .photo-reveal, .date-reveal, .message {
+                animation-duration: 0s !important;
+                transition-duration: 0s !important;
             }
         }
     </style>
@@ -279,104 +514,169 @@
     
     <div class="floating-hearts" id="floatingHearts"></div>
     
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
+    </div>
+    
     <div class="container">
         <div class="glow-effect"></div>
-        <h1 class="title">Te Amo</h1>
+        <h1 class="title" aria-label="Te Amo">Te Amo</h1>
         
         <div class="heart-photo-container">
-            <div class="heart-container" id="heartContainer">
+            <div class="heart-container" id="heartContainer" aria-label="Corazón animado con pétalos">
                 <!-- Las partículas se generarán aquí -->
             </div>
             
             <div class="photo-reveal">
-                <img src="images/Imagen de WhatsApp 2025-09-14 a las 22.18.00_1badc24b.jpg" alt="Nuestra foto">
+                <img src="images/Imagen de WhatsApp 2025-09-14 a las 22.18.00_1badc24b.jpg" alt="Nuestra foto" loading="lazy">
             </div>
+            <div class="sparkles" id="sparkles"></div>
         </div>
         
-        <div class="date-reveal">26/08/2025</div>
+        <div class="date-reveal" aria-label="Fecha especial">26/08/2025</div>
         
-        <div class="message">Feliz primer mes, me haces muy feliz</div>
+        <div class="message" aria-label="Mensaje de amor">Feliz primer mes, me haces muy feliz</div>
+    </div>
+    
+    <div class="controls">
+        <button class="control-btn" id="musicToggle" aria-label="Activar/desactivar música">♫</button>
+        <button class="control-btn" id="sparkleToggle" aria-label="Activar/desactivar brillos">✨</button>
+        <button class="control-btn" id="shareBtn" aria-label="Compartir">↗</button>
     </div>
 
     <script>
         // Función para crear partículas que forman un corazón
         document.addEventListener('DOMContentLoaded', function() {
+            // Pantalla de carga
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            
+            // Elementos principales
             const heartContainer = document.getElementById('heartContainer');
             const floatingHearts = document.getElementById('floatingHearts');
+            const sparklesContainer = document.getElementById('sparkles');
             
-            // Crear partículas para formar el corazón
-            const numParticles = 1000;
+            // Controles
+            const musicToggle = document.getElementById('musicToggle');
+            const sparkleToggle = document.getElementById('sparkleToggle');
+            const shareBtn = document.getElementById('shareBtn');
+            
+            // Crear elemento de audio
+            const bgMusic = new Audio();
+            bgMusic.src = 'https://cdn.pixabay.com/download/audio/2022/11/17/audio_c9a4a1d815.mp3?filename=se-pone-las-nike.mp3';
+            bgMusic.loop = true;
+            bgMusic.volume = 0.7;
+            let musicPlaying = false;
+            
+            // Detectar si es dispositivo móvil para ajustar la cantidad de partículas
+            const isMobile = window.matchMedia("(max-width: 768px)").matches;
+            
+            // Crear partículas para formar el corazón - reducir en móviles
+            const numParticles = isMobile ? 500 : 1000;
             
             // Función para crear coordenadas en forma de corazón
             function heartShape(t) {
                 // Ecuación paramétrica de un corazón
                 const x = 16 * Math.pow(Math.sin(t), 3);
                 const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
-                return { x: x * 9 + 300, y: -y * 9 + 300 };
+                
+                // Ajustar escala según el tamaño de la pantalla
+                const scale = isMobile ? 7 : 9;
+                const offset = isMobile ? 42.5 : 50;
+                const containerSize = isMobile ? window.innerWidth * 0.85 : 600;
+                
+                return { 
+                    x: x * scale + containerSize/2, 
+                    y: -y * scale + containerSize/2 
+                };
             }
             
-            // Crear partículas (pétalos)
-            for (let i = 0; i < numParticles; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
+            // Crear partículas (pétalos) con requestAnimationFrame para mejor rendimiento
+            let particlesCreated = 0;
+            const particlesPerFrame = isMobile ? 10 : 20;
+            
+            function createParticles() {
+                if (particlesCreated >= numParticles) return;
                 
-                // Distribuir partículas en forma de corazón
-                // Para llenar todo el corazón, no solo el borde
-                let t, pos;
-                if (i < numParticles * 0.3) {
-                    // 30% de partículas en el borde
-                    t = Math.random() * Math.PI * 2;
-                    pos = heartShape(t);
-                } else {
-                    // 70% de partículas dentro del corazón
-                    // Usamos coordenadas polares para distribuir dentro del corazón
-                    t = Math.random() * Math.PI * 2;
-                    const randomRadius = Math.random() * 0.9; // Factor para distribuir dentro
-                    const heartPos = heartShape(t);
+                const batchSize = Math.min(particlesPerFrame, numParticles - particlesCreated);
+                
+                for (let i = 0; i < batchSize; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
                     
-                    // Calcular posición desde el centro hacia el borde
-                    const centerX = 300;
-                    const centerY = 300;
-                    const dx = heartPos.x - centerX;
-                    const dy = heartPos.y - centerY;
+                    // Distribuir partículas en forma de corazón
+                    let t, pos;
+                    if (particlesCreated < numParticles * 0.3) {
+                        // 30% de partículas en el borde
+                        t = Math.random() * Math.PI * 2;
+                        pos = heartShape(t);
+                    } else {
+                        // 70% de partículas dentro del corazón
+                        // Usamos coordenadas polares para distribuir dentro del corazón
+                        t = Math.random() * Math.PI * 2;
+                        const randomRadius = Math.random() * 0.9; // Factor para distribuir dentro
+                        const heartPos = heartShape(t);
+                        
+                        // Calcular posición desde el centro hacia el borde
+                        const centerX = isMobile ? window.innerWidth * 0.425 : 300;
+                        const centerY = isMobile ? window.innerWidth * 0.425 : 300;
+                        const dx = heartPos.x - centerX;
+                        const dy = heartPos.y - centerY;
+                        
+                        pos = {
+                            x: centerX + dx * randomRadius,
+                            y: centerY + dy * randomRadius
+                        };
+                    }
                     
-                    pos = {
-                        x: centerX + dx * randomRadius,
-                        y: centerY + dy * randomRadius
-                    };
+                    particle.style.left = pos.x + 'px';
+                    particle.style.top = pos.y + 'px';
+                    
+                    // Tamaño aleatorio para los pétalos - más pequeños en móviles
+                    const size = Math.random() * (isMobile ? 8 : 10) + (isMobile ? 3 : 5);
+                    particle.style.width = size + 'px';
+                    particle.style.height = size * 1.5 + 'px';
+                    
+                    // Rotación aleatoria para los pétalos
+                    const rotation = Math.random() * 360;
+                    particle.style.transform = `rotate(${rotation}deg)`;
+                    
+                    // Color aleatorio entre azul y rosa para los pétalos
+                    const hue = Math.random() * 60 + 200; // Entre azul (200) y rosa (260)
+                    const saturation = Math.random() * 30 + 70; // Entre 70% y 100%
+                    const lightness = Math.random() * 20 + 60; // Entre 60% y 80%
+                    particle.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+                    particle.style.boxShadow = `0 0 6px hsl(${hue}, ${saturation}%, ${lightness}%), 0 0 12px hsl(${hue}, ${saturation}%, ${lightness}%)`;
+                    
+                    // Retraso aleatorio para la animación
+                    particle.style.animationDelay = (Math.random() * 3) + 's';
+                    
+                    // Duración aleatoria para la animación de flotar
+                    const floatDuration = Math.random() * 3 + 2;
+                    particle.style.animationDuration = `4s, ${floatDuration}s`;
+                    
+                    heartContainer.appendChild(particle);
+                    particlesCreated += 1;
                 }
                 
-                particle.style.left = pos.x + 'px';
-                particle.style.top = pos.y + 'px';
-                
-                // Tamaño aleatorio para los pétalos
-                const size = Math.random() * 10 + 5;
-                particle.style.width = size + 'px';
-                particle.style.height = size * 1.5 + 'px';
-                
-                // Rotación aleatoria para los pétalos
-                const rotation = Math.random() * 360;
-                particle.style.transform = rotate(${rotation}deg);
-                
-                // Color aleatorio entre azul y rosa para los pétalos
-                const hue = Math.random() * 60 + 200; // Entre azul (200) y rosa (260)
-                const saturation = Math.random() * 30 + 70; // Entre 70% y 100%
-                const lightness = Math.random() * 20 + 60; // Entre 60% y 80%
-                particle.style.backgroundColor = hsl(${hue}, ${saturation}%, ${lightness}%);
-                particle.style.boxShadow = 0 0 6px hsl(${hue}, ${saturation}%, ${lightness}%), 0 0 12px hsl(${hue}, ${saturation}%, ${lightness}%);
-                
-                // Retraso aleatorio para la animación
-                particle.style.animationDelay = (Math.random() * 3) + 's';
-                
-                // Duración aleatoria para la animación de flotar
-                const floatDuration = Math.random() * 3 + 2;
-                particle.style.animationDuration = 4s, ${floatDuration}s;
-                
-                heartContainer.appendChild(particle);
+                if (particlesCreated < numParticles) {
+                    requestAnimationFrame(createParticles);
+                } else {
+                    // Ocultar pantalla de carga cuando se completa la creación de partículas
+                    setTimeout(() => {
+                        loadingOverlay.style.opacity = '0';
+                        setTimeout(() => {
+                            loadingOverlay.style.display = 'none';
+                        }, 1000);
+                    }, 500);
+                }
             }
             
-            // Crear corazones flotantes
-            for (let i = 0; i < 20; i++) {
+            // Iniciar la creación de partículas
+            requestAnimationFrame(createParticles);
+            
+            // Crear corazones flotantes - menos en móviles
+            const numFloatingHearts = isMobile ? 10 : 20;
+            for (let i = 0; i < numFloatingHearts; i++) {
                 const heart = document.createElement('div');
                 heart.className = 'floating-heart';
                 heart.innerHTML = '❤';
@@ -388,6 +688,112 @@
                 
                 floatingHearts.appendChild(heart);
             }
+            
+            // Función para crear brillos
+            let sparklesActive = false;
+            
+            function createSparkle() {
+                if (!sparklesActive) return;
+                
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                
+                // Posición aleatoria dentro del contenedor
+                const containerRect = heartContainer.getBoundingClientRect();
+                const x = Math.random() * containerRect.width;
+                const y = Math.random() * containerRect.height;
+                
+                sparkle.style.left = x + 'px';
+                sparkle.style.top = y + 'px';
+                
+                // Tamaño aleatorio
+                const size = Math.random() * 4 + 2;
+                sparkle.style.width = size + 'px';
+                sparkle.style.height = size + 'px';
+                
+                // Color aleatorio
+                const colors = ['#fff', '#00bfff', '#ff69b4', '#ffff00'];
+                sparkle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                sparklesContainer.appendChild(sparkle);
+                
+                // Eliminar después de la animación
+                setTimeout(() => {
+                    if (sparkle.parentNode === sparklesContainer) {
+                        sparklesContainer.removeChild(sparkle);
+                    }
+                }, 2000);
+                
+                // Crear siguiente brillo
+                if (sparklesActive) {
+                    setTimeout(createSparkle, Math.random() * 200 + 50);
+                }
+            }
+            
+            // Eventos para los controles
+            musicToggle.addEventListener('click', function() {
+                if (musicPlaying) {
+                    bgMusic.pause();
+                    musicToggle.innerHTML = '♫';
+                    musicToggle.style.color = 'var(--primary-color)';
+                } else {
+                    bgMusic.play().catch(e => console.log('Error al reproducir música:', e));
+                    musicToggle.innerHTML = '◼';
+                    musicToggle.style.color = 'var(--secondary-color)';
+                }
+                musicPlaying = !musicPlaying;
+            });
+            
+            sparkleToggle.addEventListener('click', function() {
+                sparklesActive = !sparklesActive;
+                if (sparklesActive) {
+                    createSparkle();
+                    sparkleToggle.style.color = 'var(--secondary-color)';
+                } else {
+                    sparkleToggle.style.color = 'var(--primary-color)';
+                    // Limpiar brillos existentes
+                    while (sparklesContainer.firstChild) {
+                        sparklesContainer.removeChild(sparklesContainer.firstChild);
+                    }
+                }
+            });
+            
+            shareBtn.addEventListener('click', function() {
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Te Amo ❤️',
+                        text: 'Mira esta animación de amor que te he creado',
+                        url: window.location.href
+                    })
+                    .catch(err => console.log('Error al compartir:', err));
+                } else {
+                    alert('Tu navegador no soporta la función de compartir. Puedes guardar la página y enviarla manualmente.');
+                }
+            });
+            
+            // Optimización: Detener animaciones cuando la página no está visible
+            document.addEventListener('visibilitychange', function() {
+                const particles = document.querySelectorAll('.particle, .floating-heart');
+                if (document.hidden) {
+                    particles.forEach(p => p.style.animationPlayState = 'paused');
+                    if (musicPlaying) bgMusic.pause();
+                } else {
+                    particles.forEach(p => p.style.animationPlayState = 'running');
+                    if (musicPlaying) bgMusic.play();
+                }
+            });
+            
+            // Detectar orientación en móviles
+            window.addEventListener('resize', function() {
+                if (isMobile) {
+                    const isPortrait = window.innerHeight > window.innerWidth;
+                    document.body.classList.toggle('portrait', isPortrait);
+                    document.body.classList.toggle('landscape', !isPortrait);
+                }
+            });
+            
+            // Disparar el evento resize al cargar
+            window.dispatchEvent(new Event('resize'));
         });
     </script>
 </body>
