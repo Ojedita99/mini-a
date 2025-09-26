@@ -388,38 +388,52 @@
         /* Controles y mejoras visuales */
         .controls {
             position: fixed;
-            bottom: 10px;
-            right: 10px;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
-            gap: 10px;
+            gap: 15px;
             z-index: 100;
-            opacity: 0.3;
+            opacity: 0.7;
             transition: opacity 0.3s ease;
         }
         
-        .controls:hover {
+        .controls:hover, .controls:active {
             opacity: 1;
         }
         
         .control-btn {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--primary-color);
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--primary-color);
             color: var(--primary-color);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 18px;
-            box-shadow: 0 0 10px var(--primary-color);
+            font-size: 22px;
+            box-shadow: 0 0 15px var(--primary-color);
             transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
         }
         
-        .control-btn:hover {
+        .control-btn:hover, .control-btn:active {
             transform: scale(1.1);
-            box-shadow: 0 0 15px var(--primary-color);
+            box-shadow: 0 0 20px var(--primary-color);
+        }
+        
+        @media (max-width: 480px) {
+            .controls {
+                bottom: 15px;
+            }
+            
+            .control-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
         }
         
         .loading-overlay {
@@ -472,6 +486,26 @@
             .container {
                 padding: 10px;
             }
+            
+            .title {
+                top: 15px;
+                font-size: clamp(2rem, 7vw, 3.5rem);
+            }
+            
+            .heart-container {
+                margin: 15px 0;
+            }
+            
+            .date-reveal {
+                bottom: 40px;
+                font-size: clamp(1.3rem, 4.5vw, 2.2rem);
+            }
+            
+            .message {
+                bottom: 15px;
+                font-size: clamp(0.9rem, 2.8vw, 1.1rem);
+                width: 95%;
+            }
         }
         
         @media (max-width: 480px) {
@@ -491,6 +525,43 @@
             
             .message {
                 bottom: 10px;
+                width: 95%;
+                max-width: 95%;
+            }
+        }
+        
+        /* Orientación landscape en móviles */
+        @media (max-width: 896px) and (orientation: landscape) {
+            :root {
+                --heart-size: 70vh;
+                --photo-size: 35vh;
+                --glow-size: 60vh;
+            }
+            
+            .title {
+                top: 5px;
+                font-size: clamp(1.8rem, 6vh, 3rem);
+            }
+            
+            .heart-container {
+                margin: 10px 0;
+            }
+            
+            .date-reveal {
+                bottom: 25px;
+                font-size: clamp(1.2rem, 4vh, 2rem);
+            }
+            
+            .message {
+                bottom: 5px;
+                font-size: clamp(0.8rem, 2.5vh, 1rem);
+            }
+            
+            .controls {
+                bottom: 10px;
+                right: 10px;
+                left: auto;
+                transform: none;
             }
         }
         
@@ -528,7 +599,7 @@
             </div>
             
             <div class="photo-reveal">
-                <img src="images/Imagen de WhatsApp 2025-09-14 a las 22.18.00_1badc24b.jpg" alt="Nuestra foto" loading="lazy">
+                <img src="images/Imagen de WhatsApp 2025-09-14 a las 22.18.00_1badc24b.jpg" alt="Nuestra foto" loading="lazy" data-src="images/Imagen de WhatsApp 2025-09-14 a las 22.18.00_1badc24b.jpg">
             </div>
             <div class="sparkles" id="sparkles"></div>
         </div>
@@ -562,9 +633,9 @@
             
             // Crear elemento de audio
             const bgMusic = new Audio();
-            bgMusic.src = 'https://cdn.pixabay.com/download/audio/2022/11/17/audio_c9a4a1d815.mp3?filename=se-pone-las-nike.mp3';
+            bgMusic.src = 'https://assets.codepen.io/4358584/Anitek_-_Komorebi.mp3';
             bgMusic.loop = true;
-            bgMusic.volume = 0.7;
+            bgMusic.volume = 0.5;
             let musicPlaying = false;
             
             // Detectar si es dispositivo móvil para ajustar la cantidad de partículas
@@ -789,8 +860,91 @@
                     const isPortrait = window.innerHeight > window.innerWidth;
                     document.body.classList.toggle('portrait', isPortrait);
                     document.body.classList.toggle('landscape', !isPortrait);
+                    
+                    // Ajustar elementos según la orientación
+                    adjustElementsForOrientation(isPortrait);
                 }
             });
+            
+            // Función para ajustar elementos según la orientación
+            function adjustElementsForOrientation(isPortrait) {
+                const title = document.querySelector('.title');
+                const dateReveal = document.querySelector('.date-reveal');
+                const message = document.querySelector('.message');
+                
+                if (isPortrait) {
+                    title.style.top = '10px';
+                    dateReveal.style.bottom = '35px';
+                    message.style.bottom = '10px';
+                } else {
+                    title.style.top = '5px';
+                    dateReveal.style.bottom = '25px';
+                    message.style.bottom = '5px';
+                }
+            }
+            
+            // Habilitar gestos táctiles para interacción en móviles
+            if (isMobile) {
+                document.addEventListener('touchstart', handleTouchStart);
+                document.addEventListener('touchmove', handleTouchMove);
+                
+                let xDown = null;
+                let yDown = null;
+                
+                function handleTouchStart(evt) {
+                    xDown = evt.touches[0].clientX;
+                    yDown = evt.touches[0].clientY;
+                }
+                
+                function handleTouchMove(evt) {
+                    if (!xDown || !yDown) return;
+                    
+                    const xUp = evt.touches[0].clientX;
+                    const yUp = evt.touches[0].clientY;
+                    
+                    const xDiff = xDown - xUp;
+                    const yDiff = yDown - yUp;
+                    
+                    // Detectar swipe para activar efectos
+                    if (Math.abs(xDiff) > Math.abs(yDiff)) {
+                        if (xDiff > 0) {
+                            // Swipe izquierda - activar brillos
+                            sparklesActive = true;
+                            createSparkle();
+                            sparkleToggle.style.color = 'var(--secondary-color)';
+                        } else {
+                            // Swipe derecha - activar música
+                            if (!musicPlaying) {
+                                bgMusic.play().catch(e => console.log('Error al reproducir música:', e));
+                                musicToggle.innerHTML = '◼';
+                                musicToggle.style.color = 'var(--secondary-color)';
+                                musicPlaying = true;
+                            }
+                        }
+                    }
+                    
+                    xDown = null;
+                    yDown = null;
+                }
+            }
+            
+            // Optimizar carga de imágenes
+            if ('loading' in HTMLImageElement.prototype) {
+                const images = document.querySelectorAll('img[loading="lazy"]');
+                images.forEach(img => {
+                    img.src = img.getAttribute('data-src') || img.src;
+                });
+            } else {
+                // Fallback para navegadores que no soportan lazy loading
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js';
+                document.body.appendChild(script);
+                
+                document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                    img.classList.add('lazyload');
+                    img.setAttribute('data-src', img.src);
+                });
+            }
             
             // Disparar el evento resize al cargar
             window.dispatchEvent(new Event('resize'));
